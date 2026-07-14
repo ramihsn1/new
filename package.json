@@ -1,0 +1,23 @@
+{
+  "name": "al-quds-institute",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Jerusalem Institute for Political and Legal Relations - Official Website",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix backend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "keywords": [
+    "think-tank",
+    "political-research",
+    "legal-studies",
+    "international-relations"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  }
+}
