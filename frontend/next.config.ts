@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**' },
     ],
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   experimental: {
     optimizeCss: true,
   },
