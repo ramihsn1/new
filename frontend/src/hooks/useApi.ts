@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react';
 import api from '@/lib/api';
-import { ApiResponse, PaginatedResponse } from '@/types';
 
 interface UseApiState<T> {
   data: T | null;
@@ -17,13 +16,14 @@ export function useApi() {
     error: null,
   });
 
-  const get = useCallback(async <T>(url: string, params?: Record<string, any>): Promise<T> => {
+  const get = useCallback(async <T>(url: string, params?: Record<string, any>) => {
     setState({ data: null, loading: true, error: null });
     try {
-      const res = await api.get<ApiResponse<T> | PaginatedResponse<T>>(url, { params });
-      const data = res.data as any;
-      setState({ data: data.data ?? data, loading: false, error: null });
-      return data.data ?? data;
+      const res = await api.get(url, { params });
+      const body = res.data;
+      const items = body.data ?? body;
+      setState({ data: items, loading: false, error: null });
+      return items as T;
     } catch (err: any) {
       const message = err.response?.data?.error || err.message || 'An error occurred';
       setState({ data: null, loading: false, error: message });
@@ -31,12 +31,13 @@ export function useApi() {
     }
   }, []);
 
-  const post = useCallback(async <T>(url: string, body: any): Promise<T> => {
+  const post = useCallback(async <T>(url: string, body: any) => {
     setState({ data: null, loading: true, error: null });
     try {
-      const res = await api.post<ApiResponse<T>>(url, body);
-      setState({ data: res.data.data ?? res.data, loading: false, error: null });
-      return res.data.data ?? res.data;
+      const res = await api.post(url, body);
+      const result = res.data.data ?? res.data;
+      setState({ data: result, loading: false, error: null });
+      return result as T;
     } catch (err: any) {
       const message = err.response?.data?.error || err.message || 'An error occurred';
       setState({ data: null, loading: false, error: message });
@@ -44,12 +45,13 @@ export function useApi() {
     }
   }, []);
 
-  const put = useCallback(async <T>(url: string, body: any): Promise<T> => {
+  const put = useCallback(async <T>(url: string, body: any) => {
     setState({ data: null, loading: true, error: null });
     try {
-      const res = await api.put<ApiResponse<T>>(url, body);
-      setState({ data: res.data.data ?? res.data, loading: false, error: null });
-      return res.data.data ?? res.data;
+      const res = await api.put(url, body);
+      const result = res.data.data ?? res.data;
+      setState({ data: result, loading: false, error: null });
+      return result as T;
     } catch (err: any) {
       const message = err.response?.data?.error || err.message || 'An error occurred';
       setState({ data: null, loading: false, error: message });
@@ -69,7 +71,7 @@ export function useApi() {
     }
   }, []);
 
-  const upload = useCallback(async (file: File, folder?: string): Promise<any> => {
+  const upload = useCallback(async (file: File, folder?: string) => {
     setState({ data: null, loading: true, error: null });
     try {
       const formData = new FormData();
