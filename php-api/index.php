@@ -79,7 +79,7 @@ function handleAuth($method, $id, $action, $input) {
 
     $accessToken = generateJWT($userId, $role);
     $refreshToken = generateRefreshToken();
-    $db->prepare("UPDATE users SET refresh_token = ?, last_login = NOW() WHERE id = ?")
+    $db->prepare("UPDATE users SET refresh_token = ?, last_login = " . now() . " WHERE id = ?")
        ->execute([$refreshToken, $userId]);
 
     $user = $db->prepare("SELECT id, name, email, role, is_active, created_at FROM users WHERE id = ?");
@@ -104,7 +104,7 @@ function handleAuth($method, $id, $action, $input) {
 
     $accessToken = generateJWT($user['id'], $user['role']);
     $refreshToken = generateRefreshToken();
-    $db->prepare("UPDATE users SET refresh_token = ?, last_login = NOW() WHERE id = ?")
+    $db->prepare("UPDATE users SET refresh_token = ?, last_login = " . now() . " WHERE id = ?")
        ->execute([$refreshToken, $user['id']]);
 
     unset($user['password'], $user['refresh_token']);
@@ -319,7 +319,7 @@ function handlePublic($method, $id, $action, $input) {
     $sub = $existing->fetch();
     if ($sub) {
       if (!$sub['is_active']) {
-        $db->prepare("UPDATE newsletter_subscribers SET is_active = 1, subscribed_at = NOW() WHERE id = ?")
+        $db->prepare("UPDATE newsletter_subscribers SET is_active = 1, subscribed_at = " . now() . " WHERE id = ?")
            ->execute([$sub['id']]);
         jsonSuccess(['message' => 'Resubscribed successfully']);
       }
@@ -401,9 +401,9 @@ function handleAdmin($route, $method, $id, $action, $input) {
   }
 
   if ($route === 'settings' && $method === 'GET') {
-    $settings = $db->query("SELECT `key`, `value` FROM settings")->fetchAll();
+    $settings = $db->query("SELECT setting_key, value FROM settings")->fetchAll();
     $obj = [];
-    foreach ($settings as $s) $obj[$s['key']] = json_decode($s['value'], true) ?: $s['value'];
+    foreach ($settings as $s) $obj[$s['setting_key']] = json_decode($s['value'], true) ?: $s['value'];
     jsonSuccess($obj);
   }
 
@@ -411,8 +411,8 @@ function handleAdmin($route, $method, $id, $action, $input) {
     requireRole('super_admin', 'admin');
     $input = getJsonInput();
     foreach ($input as $key => $value) {
-      $db->prepare("INSERT INTO settings (`key`, `value`, `group`) VALUES (?, ?, ?)
-        ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `group` = VALUES(`group`)")
+      $db->prepare("INSERT INTO settings (setting_key, value, grp) VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE value = VALUES(value), grp = VALUES(grp)")
         ->execute([$key, is_scalar($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE),
         (is_array($value) ? ($value['group'] ?? 'general') : 'general')]);
     }
