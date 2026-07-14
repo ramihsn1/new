@@ -58,7 +58,7 @@ function NewsForm({ item, onClose, onSaved }: { item: any; onClose: () => void; 
 
   const handleSave = async () => {
     setSaving(true);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
     const token = localStorage.getItem('auth_token');
     const url = item ? `${API_URL}/news/${item._id}` : `${API_URL}/news`;
     const method = item ? 'PUT' : 'POST';

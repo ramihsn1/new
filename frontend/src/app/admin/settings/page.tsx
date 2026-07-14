@@ -12,7 +12,7 @@ export default function AdminSettingsPage() {
   }, []);
 
   const fetchSettings = async () => {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
     const res = await fetch(`${API_URL}/settings`);
     const data = await res.json();
     if (data.success) setSettings(data.data);
@@ -21,7 +21,7 @@ export default function AdminSettingsPage() {
   const handleSave = async () => {
     setSaving(true);
     const token = localStorage.getItem('auth_token');
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
     const res = await fetch(`${API_URL}/settings`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

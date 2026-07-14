@@ -18,7 +18,7 @@ export function useAdminCRUD(entityName: string, apiEndpoint: string) {
   const [showForm, setShowForm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<any>(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
   const fetchItems = async (page = 1) => {
     setLoading(true);
