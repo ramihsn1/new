@@ -67,7 +67,7 @@ export interface PublicationItem extends ContentItem {
 }
 
 export interface ProjectItem extends ContentItem {
-  status?: string;
+  projectStatus?: string;
   startYear?: number;
   endYear?: number;
   client?: string;

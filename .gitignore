@@ -9,3 +9,5 @@ uploads/*
 *.log
 Pictures/
 .vercel
+frontend/out/
+php-api/database.sqlite
